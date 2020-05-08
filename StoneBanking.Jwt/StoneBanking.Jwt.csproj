@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+	<Authors>Thiago Barradas</Authors>
+    <Description>Creates Jwt Authentication Token and Consent URL by RSA key pair</Description>
+    <PackageTags>stone, stone banking, banking, open, open banking, jwt, consent, jwt token</PackageTags>
+    <RepositoryUrl>https://github.com/ThiagoBarradas/stone-banking-jwt</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/ThiagoBarradas/stone-banking-jwt/blob/master/LICENSE</PackageLicenseUrl>
+    <Company></Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIconUrl>https://i.imgur.com/xb1z6S8.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/ThiagoBarradas/stone-banking-jwt</PackageProjectUrl>
+    <LangVersion>7.3</LangVersion>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle" Version="1.8.6.1" />
+    <PackageReference Include="jose-jwt" Version="2.5.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
+  </ItemGroup>
+
+</Project>

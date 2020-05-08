@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoneBanking.Jwt", "StoneBanking.Jwt\StoneBanking.Jwt.csproj", "{A7C8BB92-95F9-4F24-A777-C2008074E109}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1B0BF70D-EAEA-4421-81F7-96491ABCEAFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoneBanking.Jwt.Tests", "StoneBanking.Jwt.Tests\StoneBanking.Jwt.Tests.csproj", "{FA023308-4D8C-4383-B2C0-76B02E7D868C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "git", "git", "{443C7C80-18E1-456D-A8C4-761D245C276B}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{751701DD-BD94-4775-8E35-737BAA88C9EE}"
+	ProjectSection(SolutionItems) = preProject
+		.github\CONTRIBUTING.md = .github\CONTRIBUTING.md
+		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
+		LICENSE = LICENSE
+		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "devops", "devops", "{C410CFE7-BAD3-442F-ABC9-A04D01AA61BB}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		codecov.yml = codecov.yml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A7C8BB92-95F9-4F24-A777-C2008074E109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7C8BB92-95F9-4F24-A777-C2008074E109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7C8BB92-95F9-4F24-A777-C2008074E109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7C8BB92-95F9-4F24-A777-C2008074E109}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA023308-4D8C-4383-B2C0-76B02E7D868C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA023308-4D8C-4383-B2C0-76B02E7D868C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA023308-4D8C-4383-B2C0-76B02E7D868C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA023308-4D8C-4383-B2C0-76B02E7D868C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{443C7C80-18E1-456D-A8C4-761D245C276B} = {1B0BF70D-EAEA-4421-81F7-96491ABCEAFE}
+		{751701DD-BD94-4775-8E35-737BAA88C9EE} = {1B0BF70D-EAEA-4421-81F7-96491ABCEAFE}
+		{C410CFE7-BAD3-442F-ABC9-A04D01AA61BB} = {1B0BF70D-EAEA-4421-81F7-96491ABCEAFE}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E53448DE-1C8D-4BEA-92D8-533BBE1269B7}
+	EndGlobalSection
+EndGlobal
