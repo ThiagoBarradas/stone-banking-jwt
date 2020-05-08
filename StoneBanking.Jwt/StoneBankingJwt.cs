@@ -75,7 +75,7 @@ namespace StoneBanking.Jwt
                 var publicKeyParams = pemReader.ReadObject() as RsaKeyParameters;
                 if (publicKeyParams == null)
                 {
-                    throw new Exception("Could not read RSA public key");
+                    throw new ArgumentException("Could not read RSA PublicKey, please check your keys.\n See how generate a valid key: https://gist.github.com/ThiagoBarradas/e58ac282665306977777ffa3f32df376");
                 }
                 rsaParams = DotNetUtilities.ToRSAParameters(publicKeyParams);
             }
@@ -95,7 +95,7 @@ namespace StoneBanking.Jwt
                 var keyPair = pemReader.ReadObject() as AsymmetricCipherKeyPair;
                 if (keyPair == null)
                 {
-                    throw new Exception("Could not read RSA private key");
+                    throw new ArgumentException("Could not read RSA PrivateKey, please check your keys.\n See how generate a valid key: https://gist.github.com/ThiagoBarradas/e58ac282665306977777ffa3f32df376");
                 }
                 var privateRsaParams = keyPair.Private as RsaPrivateCrtKeyParameters;
                 rsaParams = DotNetUtilities.ToRSAParameters(privateRsaParams);
@@ -113,7 +113,7 @@ namespace StoneBanking.Jwt
             var now_timestamp = ((DateTimeOffset) now).ToUnixTimeSeconds();
             var exp_timestamp = ((DateTimeOffset) now.AddSeconds(this.StoneBankingSettings.AuthenticationExpiresInSeconds)).ToUnixTimeSeconds();
 
-            var payload = new Dictionary<string, object>()
+            var payload = new Dictionary<string, object>
             {
                 { "aud", StoneBankingSettingsStatic.AuthenticationAud },
                 { "clientId", this.StoneBankingSettings.ClientId },
@@ -139,7 +139,7 @@ namespace StoneBanking.Jwt
                 redirectUrl = this.StoneBankingSettings.ConsentDefaultRedirectUrl;
             }
 
-            var payload = new Dictionary<string, object>()
+            var payload = new Dictionary<string, object>
             {
                 { "type", StoneBankingSettingsStatic.ConsentType },
                 { "aud", StoneBankingSettingsStatic.ConsentAud },
@@ -169,7 +169,7 @@ namespace StoneBanking.Jwt
 
             if (this.StoneBankingSettings.ClientId == null)
             {
-                throw new ArgumentNullException("ClientId cannot be null. See how to create a application https://docs.openbank.stone.com.br/docs/cadastro-da-aplicacao-guides");
+                throw new ArgumentNullException("ClientId cannot be null.\n See how to create a application https://docs.openbank.stone.com.br/docs/cadastro-da-aplicacao-guides");
             }
 
             if (this.StoneBankingSettings.PublicKey == null)
@@ -213,10 +213,10 @@ namespace StoneBanking.Jwt
                 keyContent = File.ReadAllText(key);
             }
 
-            return this.HandleBreakLine(keyContent);
+            return HandleBreakLine(keyContent);
         }
 
-        private string HandleBreakLine(string content)
+        private static string HandleBreakLine(string content)
         {
             return content?.Replace("\\n", "\n")
                            .Replace("\\r", "\r")

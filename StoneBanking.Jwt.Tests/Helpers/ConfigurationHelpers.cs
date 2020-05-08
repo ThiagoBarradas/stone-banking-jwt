@@ -4,9 +4,9 @@ using System.IO;
 
 namespace StoneBanking.Jwt.Tests.Helpers
 {
-    public class ConfigurationHelpers
+    public static class ConfigurationHelpers
     {
-        public static IConfigurationRoot LoadConfigurations(string customJsonName = null, string envVarsPrefix = null)
+        public static IConfigurationRoot LoadConfigurations(string customJsonName, string envVarsPrefix)
         {
             var envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
