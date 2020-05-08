@@ -1,6 +1,6 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5bb3ad40445a4d5e9aad8469de06e808)](https://app.codacy.com/app/ThiagoBarradas/StoneBanking.Jwt?utm_source=github.com&utm_medium=referral&utm_content=ThiagoBarradas/StoneBanking.Jwt&utm_campaign=badger)
-[![Build status](https://ci.appveyor.com/api/projects/status/e50c386k68c9dy7j/branch/master?svg=true)](https://ci.appveyor.com/project/ThiagoBarradas/StoneBanking.Jwt/branch/master)
-[![codecov](https://codecov.io/gh/ThiagoBarradas/StoneBanking.Jwt/branch/master/graph/badge.svg)](https://codecov.io/gh/ThiagoBarradas/StoneBanking.Jwt)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/77613553ba4d4879b3ce95b3cc2f8584)](https://www.codacy.com/manual/ThiagoBarradas/stone-banking-jwt?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ThiagoBarradas/stone-banking-jwt&amp;utm_campaign=Badge_Grade)
+[![Build status](https://ci.appveyor.com/api/projects/status/cbgwji5smu341aq1/branch/master?svg=true)](https://ci.appveyor.com/project/ThiagoBarradas/stone-banking-jwt/branch/master)
+[![codecov](https://codecov.io/gh/ThiagoBarradas/stone-banking-jwt/branch/master/graph/badge.svg)](https://codecov.io/gh/ThiagoBarradas/stone-banking-jwt)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/StoneBanking.Jwt.svg)](https://www.nuget.org/packages/StoneBanking.Jwt/)
 [![NuGet Version](https://img.shields.io/nuget/v/StoneBanking.Jwt.svg)](https://www.nuget.org/packages/StoneBanking.Jwt/)
 
@@ -99,7 +99,7 @@ string accessToken = stoneBankingJwt.CreateAuthenticationToken();
 string consentUrl = stoneBankingJwt.CreateConsentUrl();
 ```
 
-### Creating Consent Url With Metadatas
+### Creating Consent Url With Metadata
 
 ```
 var metadata = new Dictionary<string, string>
@@ -123,8 +123,6 @@ string consentUrl = stoneBankingJwt.CreateConsentUrl(newUrl);
 ```
 Dictionary<string, object> decodedToken = stoneBankingJwt.DecodeToken(token);
 ```
-
-### Configuring with your application credentials
 
 ## How can I contribute?
 Please, refer to [CONTRIBUTING](.github/CONTRIBUTING.md)
