@@ -70,7 +70,8 @@ var settings = new StoneBankingSettings
 {
     ClientId = "xxxx",
     PrivateKey = "key.pem",
-    PublicKey = "key.pub"
+    PublicKey = "key.pub",
+    ConsentDefaultRedirectUrl = "https://mysite.com/redirect"
 };
 services.AddStoneBankingJwt(settings);
 ```
@@ -82,21 +83,38 @@ var settings = new StoneBankingSettings
 {
     ClientId = "xxxx",
     PrivateKey = "key.pem",
-    PublicKey = "key.pub"
+    PublicKey = "key.pub",
+    ConsentDefaultRedirectUrl = "https://mysite.com/redirect"
 };
-IStoneBankingJwt stoneBankingJwt = new StoneBankingJwt(settings);
+IStoneBankingJwt stoneBanking = new StoneBankingJwt(settings);
 ```
 
-### Creating Authentication Tokens
+### Creating Authentication Token
 
 ```
-string accessToken = stoneBankingJwt.CreateAuthenticationToken();
+string authenticationToken = stoneBanking.CreateAuthenticationToken();
+```
+
+### Creating Access Token with Authentication Token
+
+```
+string authenticationToken = stoneBanking.CreateAuthenticationToken();
+string accessToken = stoneBanking.CreateAccessToken(authenticationToken);
+```
+
+### Creating Access Token with Auto Managed Authentication Token Creation [BEST USAGE]
+
+```
+// this will create a token and reuse it during token expiration time
+// 60 seconds before expiration, next call will generate a new access token
+
+string accessToken = stoneBanking.CreateAccessToken();
 ```
 
 ### Creating Consent Url
 
 ```
-string consentUrl = stoneBankingJwt.CreateConsentUrl();
+string consentUrl = stoneBanking.CreateConsentUrl();
 ```
 
 ### Creating Consent Url With Metadata
@@ -108,14 +126,7 @@ var metadata = new Dictionary<string, string>
     { "other_data", "123" }
 };
 
-string consentUrl = stoneBankingJwt.CreateConsentUrl(metadata);
-```
-
-### Creating Consent Url Replacing Default Redirect Url
-
-```
-string newUrl = "https://mysite.com/user123/stone-banking-success";
-string consentUrl = stoneBankingJwt.CreateConsentUrl(newUrl);
+string consentUrl = stoneBanking.CreateConsentUrl(metadata);
 ```
 
 ### Decoding Jwt Token (created with your RSA key pair)

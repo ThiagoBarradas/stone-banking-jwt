@@ -1,4 +1,5 @@
-﻿using Org.BouncyCastle.Crypto;
+﻿using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
@@ -8,21 +9,37 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Reflection;
 using System.Security.Cryptography;
 
 namespace StoneBanking.Jwt
 {
     public class StoneBankingJwt : IStoneBankingJwt
     {
-        public StoneBankingSettings StoneBankingSettings { get; set; }
+        private object Lock = new object();
 
-        public string PrivateKey { get; set; }
+        public DateTime ExpiresIn { get; private set; } = DateTime.UtcNow;
 
-        public string PublicKey { get; set; }
+        public AccessTokenResponse CurrentAccessToken { get; private set; } = new AccessTokenResponse();
+
+        public StoneBankingSettings StoneBankingSettings { get; private set; }
+
+        public string PrivateKey { get; private set; }
+
+        public string PublicKey { get; private set; }
+
+        public string AssemblyVersion { get; private set; }
+
+        public string AccountsApiUrl { get; private set; }
 
         public StoneBankingJwt(StoneBankingSettings stoneBankingSettings)
         {
             this.StoneBankingSettings = stoneBankingSettings;
+            this.AssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            this.AccountsApiUrl = StoneBankingSettingsStatic.GetAccountsApi(this.StoneBankingSettings.Environment);
 
             this.ValidateRequiredSettings();
             this.ReadPublicKey();
@@ -31,31 +48,82 @@ namespace StoneBanking.Jwt
 
         public string CreateConsentUrl()
         {
-            return this.CreateConsentUrl(null, null);
+            return this.CreateConsentUrl(null);
         }
 
         public string CreateConsentUrl(Dictionary<string, string> metadata)
         {
-            return this.CreateConsentUrl(metadata, null);
-        }
-
-        public string CreateConsentUrl(string redirectUrl)
-        {
-            return this.CreateConsentUrl(null, redirectUrl);
-        }
-
-        public string CreateConsentUrl(Dictionary<string, string> metadata, string redirectUrl)
-        {
-            var token = this.CreateToken(this.GetConsentPayload(redirectUrl, metadata));
+            var token = this.CreateToken(this.GetConsentPayload(metadata));
             var clientId = this.StoneBankingSettings.ClientId;
-            var baseUrl = StoneBankingSettingsStatic.GetAccountsApi(this.StoneBankingSettings.Environment);
 
-            return $"{baseUrl}/#/consent?type=consent&client_id={clientId}&jwt={token}";
+            return $"{this.AccountsApiUrl}/#/consent?type=consent&client_id={clientId}&jwt={token}";
         }
 
         public string CreateAuthenticationToken()
         {
             return this.CreateToken(this.GetAuthenticationPayload());
+        }
+
+        public AccessTokenResponse CreateAccessToken()
+        {
+            lock (Lock)
+            {
+                var now = DateTime.UtcNow;
+                if (now < this.CurrentAccessToken.ExpiresInDate)
+                {
+                    return this.CurrentAccessToken;
+                }
+
+                var authenticationToken = this.CreateAuthenticationToken();
+                this.CurrentAccessToken = this.CreateAccessToken(authenticationToken);
+            }
+
+            return this.CurrentAccessToken;
+        }
+        
+        public AccessTokenResponse CreateAccessToken(string authenticationToken)
+        {
+            var url = $"{this.AccountsApiUrl}/auth/realms/stone_bank/protocol/openid-connect/token";
+
+            var body = new List<KeyValuePair<string, string>>();
+            body.Add(new KeyValuePair<string, string>("client_id", this.StoneBankingSettings.ClientId));
+            body.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
+            body.Add(new KeyValuePair<string, string>("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"));
+            body.Add(new KeyValuePair<string, string>("client_assertion", authenticationToken));
+
+            var request = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new FormUrlEncodedContent(body)
+            };
+
+            request.Headers.Add("Accept", "application/json");
+            ProductHeaderValue header = new ProductHeaderValue("StoneBanking.Jwt", this.AssemblyVersion);
+            ProductInfoHeaderValue userAgent = new ProductInfoHeaderValue(header);
+            request.Headers.UserAgent.Add(userAgent);
+
+            var json = "{}";
+            using (var client = new HttpClient())
+            {
+                var response = client.SendAsync(request).Result;
+                
+                if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    json = response.Content.ReadAsStringAsync().Result;
+                    var error = JsonConvert.DeserializeObject<StoneBankingErrorResponse>(json);
+                    throw new HttpRequestException($"BadRequest: {error.ErrorDescription}");
+                }
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException($"Invalid status code received from StoneBanking api: {response.StatusCode}");
+                }
+
+                json = response.Content.ReadAsStringAsync().Result;
+            }
+
+            var accessToken = JsonConvert.DeserializeObject<AccessTokenResponse>(json);
+
+            return accessToken;
         }
 
         public Dictionary<string, object> DecodeToken(string token)
@@ -128,16 +196,11 @@ namespace StoneBanking.Jwt
             return payload;
         }
 
-        private Dictionary<string, object> GetConsentPayload(string redirectUrl, Dictionary<string, string> metadata)
+        private Dictionary<string, object> GetConsentPayload(Dictionary<string, string> metadata)
         {
             var now = DateTime.UtcNow;
             var now_timestamp = ((DateTimeOffset) now).ToUnixTimeSeconds();
             var exp_timestamp = ((DateTimeOffset) now.AddSeconds(this.StoneBankingSettings.ConsentExpiresInSeconds)).ToUnixTimeSeconds();
-
-            if (string.IsNullOrWhiteSpace(redirectUrl))
-            {
-                redirectUrl = this.StoneBankingSettings.ConsentDefaultRedirectUrl;
-            }
 
             var payload = new Dictionary<string, object>
             {
@@ -149,7 +212,7 @@ namespace StoneBanking.Jwt
                 { "iat", now_timestamp },
                 { "nbf", now_timestamp },
                 { "jti", now_timestamp.ToString() },
-                { "redirect_uri", redirectUrl }
+                { "redirect_uri", this.StoneBankingSettings.ConsentDefaultRedirectUrl }
             };
 
             if (metadata?.Any() == true)

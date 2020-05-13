@@ -52,47 +52,6 @@ namespace StoneBanking.Jwt.Tests
         }
 
         [Fact]
-        public static void CreateConsentUrl_WithRedirectUrl()
-        {
-            // arrange
-            var now_timestamp = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
-            var configuration = ConfigurationHelpers.LoadConfigurations("RsaByFile", null);
-            var services = new ServiceCollection();
-            services.AddStoneBankingJwt(configuration);
-            var jwtSign = services.BuildServiceProvider().GetService<IStoneBankingJwt>();
-
-            // act
-            var url = jwtSign.CreateConsentUrl(redirectUrl: "https://www.test.com/callback");
-            var query = ParseQueryString(url.Split("?").LastOrDefault());
-            var decodedToken = jwtSign.DecodeToken(query["jwt"]);
-
-            // assert
-            Assert.Equal(query.Count, 3);
-            Assert.Equal(query["type"], "consent");
-            Assert.Equal(query["client_id"], "123123123");
-            Assert.NotNull(query["jwt"]);
-            Assert.Equal(url.Split("?").FirstOrDefault(), "https://sandbox-accounts.openbank.stone.com.br/#/consent");
-
-            var aud = decodedToken["aud"].ToString();
-            var clientId = decodedToken["client_id"].ToString();
-            var iss = decodedToken["iss"].ToString();
-            var exp = int.Parse(decodedToken["exp"].ToString());
-            var iat = int.Parse(decodedToken["iat"].ToString());
-            var nbf = int.Parse(decodedToken["nbf"].ToString());
-            var jti = int.Parse(decodedToken["jti"].ToString());
-            var redirect_uri = decodedToken["redirect_uri"].ToString();
-
-            Assert.Equal(aud, "accounts-hubid@openbank.stone.com.br");
-            Assert.Equal(clientId, "123123123");
-            Assert.Equal(iss, "123123123");
-            Assert.True(exp >= now_timestamp + 300 && exp <= now_timestamp + 100 + 300);
-            Assert.True(iat >= now_timestamp && iat <= now_timestamp + 100);
-            Assert.True(nbf >= now_timestamp && nbf <= now_timestamp + 100);
-            Assert.True(jti >= now_timestamp && nbf <= now_timestamp + 100);
-            Assert.Equal(redirect_uri, "https://www.test.com/callback");
-        }
-
-        [Fact]
         public static void CreateConsentUrl_WithMetadata()
         {
             // arrange
