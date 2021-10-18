@@ -11,6 +11,38 @@ namespace StoneBanking.Jwt.Tests
     public static class StoneBankingJwtTests
     {
         [Fact]
+        public static void CreateProductionConsentUrl_WithoutParams()
+        {
+            // arrange
+            var now_timestamp = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+            var configuration = ConfigurationHelpers.LoadConfigurations("RsaByString", null);
+            var services = new ServiceCollection();
+            services.AddStoneBankingJwt(configuration);
+            var jwtSign = services.BuildServiceProvider().GetService<IStoneBankingJwt>();
+
+            // act
+            var url = jwtSign.CreateConsentUrl();
+            var query = ParseQueryString(url.Split("?").LastOrDefault());
+            var decodedToken = jwtSign.DecodeToken(query["jwt"]);
+
+            // assert
+            Assert.Equal(query.Count, 2);
+            Assert.Equal(query["client_id"], "321321321");
+            Assert.NotNull(query["jwt"]);
+            Assert.Equal(url.Split("?").FirstOrDefault(), "https://conta.stone.com.br/consentimento");
+
+            var aud = decodedToken["aud"].ToString();
+            var clientId = decodedToken["client_id"].ToString();
+            var iss = decodedToken["iss"].ToString();
+            var redirect_uri = decodedToken["redirect_uri"].ToString();
+
+            Assert.Equal(aud, "accounts-hubid@openbank.stone.com.br");
+            Assert.Equal(clientId, "321321321");
+            Assert.Equal(iss, "321321321");
+            Assert.Equal(redirect_uri, "https://mysite.com/stonebanking/success2");
+        }
+
+        [Fact]
         public static void CreateConsentUrl_WithoutParams()
         {
             // arrange
@@ -26,11 +58,10 @@ namespace StoneBanking.Jwt.Tests
             var decodedToken = jwtSign.DecodeToken(query["jwt"]);
 
             // assert
-            Assert.Equal(query.Count, 3);
-            Assert.Equal(query["type"], "consent");
+            Assert.Equal(query.Count, 2);
             Assert.Equal(query["client_id"], "123123123");
             Assert.NotNull(query["jwt"]);
-            Assert.Equal(url.Split("?").FirstOrDefault(), "https://sandbox-accounts.openbank.stone.com.br/#/consent");
+            Assert.Equal(url.Split("?").FirstOrDefault(), "https://sandbox.conta.stone.com.br/consentimento");
 
             var aud = decodedToken["aud"].ToString();
             var clientId = decodedToken["client_id"].ToString();
@@ -72,11 +103,10 @@ namespace StoneBanking.Jwt.Tests
             var decodedToken = jwtSign.DecodeToken(query["jwt"]);
 
             // assert
-            Assert.Equal(query.Count, 3);
-            Assert.Equal(query["type"], "consent");
+            Assert.Equal(query.Count, 2);
             Assert.Equal(query["client_id"], "123123123");
             Assert.NotNull(query["jwt"]);
-            Assert.Equal(url.Split("?").FirstOrDefault(), "https://sandbox-accounts.openbank.stone.com.br/#/consent");
+            Assert.Equal(url.Split("?").FirstOrDefault(), "https://sandbox.conta.stone.com.br/consentimento");
 
             var aud = decodedToken["aud"].ToString();
             var clientId = decodedToken["client_id"].ToString();
@@ -125,7 +155,7 @@ namespace StoneBanking.Jwt.Tests
             var realm = decodedToken["realm"].ToString();
             var sub = decodedToken["sub"].ToString();
 
-            Assert.Equal(aud, "https://sandbox-accounts.openbank.stone.com.br/auth/realms/stone_bank");
+            Assert.Equal(aud, "https://sandbox.conta.stone.com.br/auth/realms/stone_bank");
             Assert.Equal(clientId, "123123123");
             Assert.True(exp >= now_timestamp + 900 && exp <= now_timestamp + 100 + 900);
             Assert.True(iat >= now_timestamp       && iat <= now_timestamp + 100);

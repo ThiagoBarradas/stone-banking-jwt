@@ -56,7 +56,7 @@ namespace StoneBanking.Jwt
             var token = this.CreateToken(this.GetConsentPayload(metadata));
             var clientId = this.StoneBankingSettings.ClientId;
 
-            return $"{this.AccountsApiUrl}/#/consent?type=consent&client_id={clientId}&jwt={token}";
+            return $"{this.AccountsApiUrl}/consentimento?client_id={clientId}&jwt={token}";
         }
 
         public string CreateAuthenticationToken()
