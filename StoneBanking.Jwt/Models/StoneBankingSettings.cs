@@ -19,9 +19,9 @@
 
     public static class StoneBankingSettingsStatic
     {
-        public static string AccountsApiSandbox => "https://sandbox-accounts.openbank.stone.com.br";
-        
-        public static string AccountsApiProduction => "https://accounts.openbank.stone.com.br";
+        public static string AccountsApiSandbox => "https://sandbox.conta.stone.com.br";
+
+        public static string AccountsApiProduction => "https://conta.stone.com.br";
 
         public static string GetAccountsApi(StoneBankingEnvironment environment)
         {
@@ -41,7 +41,7 @@
                 : AuthenticationApiProduction;
         }
 
-        public static string AuthenticationAud => "https://sandbox-accounts.openbank.stone.com.br/auth/realms/stone_bank";
+        public static string AuthenticationAud => "https://sandbox.conta.stone.com.br/auth/realms/stone_bank";
 
         public static string AuthenticationRealms => "stone_bank";
 
