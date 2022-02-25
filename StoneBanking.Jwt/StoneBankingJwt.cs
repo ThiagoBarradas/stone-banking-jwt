@@ -161,7 +161,7 @@ namespace StoneBanking.Jwt
             {
                 var pemReader = new PemReader(tr);
                 var keyPair = pemReader.ReadObject() as AsymmetricCipherKeyPair;
-                if (keyPair == null)
+                if (keyPair == null) 
                 {
                     throw new ArgumentException("Could not read RSA PrivateKey, please check your keys.\n See how generate a valid key: https://gist.github.com/ThiagoBarradas/e58ac282665306977777ffa3f32df376");
                 }
