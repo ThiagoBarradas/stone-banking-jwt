@@ -29,7 +29,7 @@ namespace StoneBanking.Jwt.Tests
             Assert.Equal(query.Count, 2);
             Assert.Equal(query["client_id"], "321321321");
             Assert.NotNull(query["jwt"]);
-            Assert.Equal(url.Split("?").FirstOrDefault(), "https://conta.stone.com.br/consentimento");
+            Assert.Equal(url.Split("?").FirstOrDefault(), "https://accounts.openbank.stone.com.br/consentimento");
 
             var aud = decodedToken["aud"].ToString();
             var clientId = decodedToken["client_id"].ToString();
@@ -61,7 +61,7 @@ namespace StoneBanking.Jwt.Tests
             Assert.Equal(query.Count, 2);
             Assert.Equal(query["client_id"], "123123123");
             Assert.NotNull(query["jwt"]);
-            Assert.Equal(url.Split("?").FirstOrDefault(), "https://sandbox.conta.stone.com.br/consentimento");
+            Assert.Equal(url.Split("?").FirstOrDefault(), "https://sandbox-accounts.openbank.stone.com.br/consentimento");
 
             var aud = decodedToken["aud"].ToString();
             var clientId = decodedToken["client_id"].ToString();
@@ -106,7 +106,7 @@ namespace StoneBanking.Jwt.Tests
             Assert.Equal(query.Count, 2);
             Assert.Equal(query["client_id"], "123123123");
             Assert.NotNull(query["jwt"]);
-            Assert.Equal(url.Split("?").FirstOrDefault(), "https://sandbox.conta.stone.com.br/consentimento");
+            Assert.Equal(url.Split("?").FirstOrDefault(), "https://sandbox-accounts.openbank.stone.com.br/consentimento");
 
             var aud = decodedToken["aud"].ToString();
             var clientId = decodedToken["client_id"].ToString();
@@ -155,7 +155,7 @@ namespace StoneBanking.Jwt.Tests
             var realm = decodedToken["realm"].ToString();
             var sub = decodedToken["sub"].ToString();
 
-            Assert.Equal(aud, "https://sandbox.conta.stone.com.br/auth/realms/stone_bank");
+            Assert.Equal(aud, "https://sandbox-accounts.openbank.stone.com.br/auth/realms/stone_bank");
             Assert.Equal(clientId, "123123123");
             Assert.True(exp >= now_timestamp + 900 && exp <= now_timestamp + 100 + 900);
             Assert.True(iat >= now_timestamp       && iat <= now_timestamp + 100);

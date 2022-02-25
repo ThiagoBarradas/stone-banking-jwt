@@ -19,9 +19,9 @@
 
     public static class StoneBankingSettingsStatic
     {
-        public static string AccountsApiSandbox => "https://sandbox-accounts.openbank.stone.com.br/";
+        public static string AccountsApiSandbox => "https://sandbox-accounts.openbank.stone.com.br";
 
-        public static string AccountsApiProduction => "https://accounts.openbank.stone.com.br/";
+        public static string AccountsApiProduction => "https://accounts.openbank.stone.com.br";
 
         public static string GetAccountsApi(StoneBankingEnvironment environment)
         {

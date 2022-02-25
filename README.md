@@ -13,7 +13,7 @@ PM> Install-Package StoneBanking.Jwt
 
 ## Stone Banking Application
 
-See more here: https://docs.openbank.stone.com.br/docs/guias/integracao/consentimento/
+See more here: https://docs.openbank.stone.com.br/docs/guias/token-de-acesso/
 
 ## Creating you RSA 4096 key pair
 
