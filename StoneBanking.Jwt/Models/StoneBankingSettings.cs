@@ -19,9 +19,9 @@
 
     public static class StoneBankingSettingsStatic
     {
-        public static string AccountsApiSandbox => "https://sandbox.conta.stone.com.br";
+        public static string AccountsApiSandbox => "https://sandbox-accounts.openbank.stone.com.br/";
 
-        public static string AccountsApiProduction => "https://conta.stone.com.br";
+        public static string AccountsApiProduction => "https://accounts.openbank.stone.com.br/";
 
         public static string GetAccountsApi(StoneBankingEnvironment environment)
         {
@@ -37,16 +37,25 @@
         public static string GetAuthenticationApi(StoneBankingEnvironment environment)
         {
             return (environment == StoneBankingEnvironment.Production)
-                ? AuthenticationApiSandbox
-                : AuthenticationApiProduction;
+                ? AuthenticationApiProduction
+                : AuthenticationApiSandbox;
         }
-
-        public static string AuthenticationAud => "https://sandbox.conta.stone.com.br/auth/realms/stone_bank";
 
         public static string AuthenticationRealms => "stone_bank";
 
         public static string ConsentType => "consent";
 
         public static string ConsentAud => "accounts-hubid@openbank.stone.com.br";
+
+        public static string AudSandbox => "https://sandbox-accounts.openbank.stone.com.br/auth/realms/stone_bank";
+        
+        public static string AudProduction => "https://accounts.openbank.stone.com.br/auth/realms/stone_bank";
+        
+        public static string GetAud(StoneBankingEnvironment environment)
+        {
+            return (environment == StoneBankingEnvironment.Production)
+                ? AudProduction
+                : AudSandbox;
+        }
     }
 }

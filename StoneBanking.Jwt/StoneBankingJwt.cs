@@ -183,14 +183,15 @@ namespace StoneBanking.Jwt
 
             var payload = new Dictionary<string, object>
             {
-                { "aud", StoneBankingSettingsStatic.AuthenticationAud },
+                { "aud", $"{StoneBankingSettingsStatic.GetAud(this.StoneBankingSettings.Environment)}" },
                 { "clientId", this.StoneBankingSettings.ClientId },
                 { "exp", exp_timestamp },
                 { "iat", now_timestamp },
                 { "nbf", now_timestamp },
                 { "jti", now_timestamp.ToString() },
                 { "realm", StoneBankingSettingsStatic.AuthenticationRealms },
-                { "sub", this.StoneBankingSettings.ClientId }
+                { "sub", this.StoneBankingSettings.ClientId },
+                { "iss", this.StoneBankingSettings.ClientId },
             };
 
             return payload;
